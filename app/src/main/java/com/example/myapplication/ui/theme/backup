@@ -1,0 +1,72 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.System.out
+import java.util.*
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
+
+private lateinit var reader: BufferedReader
+private var tokenizer: StringTokenizer? = null
+
+private fun read(): String {
+    while (tokenizer == null || !tokenizer!!.hasMoreTokens()) {
+        tokenizer = StringTokenizer(readLn())
+    }
+    return tokenizer!!.nextToken()
+}
+
+private fun readInt() = read().toInt()
+private fun readLong() = read().toLong()
+private fun readLn() = reader.readLine()!!
+private fun readInts() = readLn().split(" ").map { it.toInt() }
+private fun readInts(sz: Int) = Array(sz) { readInt() }
+private fun readLongs() = readLn().split(" ").map { it.toLong() }
+private fun readLongs(sz: Int) = Array(sz) { readLong() }
+
+private operator fun String.times(n: Int): String {
+    val sb = StringBuilder()
+    repeat(n) {
+        sb.append(this)
+    }
+    return sb.toString()
+}
+
+fun com.example.myapplication.chatgpt.main() {
+    reader = BufferedReader(InputStreamReader(System.`in`))
+    com.example.myapplication.chatgpt.solve()
+    out.close()
+}
+
+fun com.example.myapplication.chatgpt.solve() {
+    val n = readInt()
+    val a = readInts()
+    val mp = mutableMapOf<Int, Int>()
+    var ans = 0
+    a.forEach {
+        if (it == 0) {
+            ans += n - 1
+        } else {
+            var ret = it
+            for (i in 1..sqrt(sqrt((n + 0.5))).roundToInt()) {
+                if (it % (i * i) == 0) {
+                    ret /= i * i
+                    val d = it / (i*i)
+                    if (it % (d * d) == 0) {
+                        ret /= d * d
+                    }
+                }
+                if (it % i == 0) {
+                    val d = it / i
+                    if (it % (d * d) == 0) {
+                        ret /= d * d
+                    }
+                }
+            }
+            mp[ret] = mp.getOrDefault(ret, 0) + 1
+        }
+    }
+    mp.forEach {
+        ans += it.value * (it.value - 1) / 2
+    }
+    println(ans)
+}
